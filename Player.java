@@ -5,6 +5,12 @@ public class Player {
 
 	private String name;
 	
+	private int Metal;
+	private int Wood;
+	private int Food;
+	private int Water;
+	private int Stone;
+	
 	private int Privacy;
 	private int Wealth;
 	private int Environment;
@@ -18,14 +24,15 @@ public class Player {
 	private int KnowledgeGoal;
 	
 	private int points;
-	private Terrain ground;
+	private Territory ground;
 	
 	
-	public Player(String name) {
+	public Player(String name, Territory origin) {
 		Scanner in = new Scanner(System.in);
 		this.name = name;
 		System.out.println("Player: "+name);
-		ground = new Terrain();
+		ground = origin;
+		ground.addPlayer(this);
 		points = 100;
 		
 		Privacy = 100;
@@ -39,7 +46,7 @@ public class Player {
 		EnvironmentGoal = 0;
 		PowerGoal = 0;
 		KnowledgeGoal = 0;
-		System.out.println("Assign points to goal attributes: \nP: Privacy\nW: Wealth\nE: Environment\nO: Power\nK: Knowledge");
+		System.out.println("Assign points to goal attributes: \nP: Privacy\nW: Wealth\nE: Environment\nO: Power\nK: Knowledge\n");
 		while (points > 0) {
 			System.out.println("5 points to: ");
 			String input = in.next();
@@ -74,5 +81,43 @@ public class Player {
 		System.out.println("EnvironmentGoal: "+ EnvironmentGoal);
 		System.out.println("PowerGoal: "+ PowerGoal);
 		System.out.println("KnowledgeGoal: "+ KnowledgeGoal);
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void addResource(int amount, Resource res) {
+		String r = res.toString();
+		if (amount <= 0) {
+			System.out.println("Cannot add negative resources");
+			return;
+		}
+		if (r.equals("Metal")) {
+			Metal += amount;
+			return;
+		}if (r.equals("Wood")) {
+			Wood += amount;
+			return;
+		}if (r.equals("Food")) {
+			Food += amount;
+			return;
+		}if (r.equals("Water")) {
+			Water += amount;
+			return;
+		}if (r.equals("Stone")) {
+			Stone += amount;
+			return;
+		}
+	}
+	
+	public Territory isOn() {
+		return ground;
+	}
+	
+	public void travel(Territory ter) {
+		isOn().removePlayer(this);
+		ter.addPlayer(this);
+		ground = ter;
 	}
 }
