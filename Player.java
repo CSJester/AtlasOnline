@@ -50,15 +50,15 @@ public class Player {
 		while (points > 0) {
 			System.out.println("5 points to: ");
 			String input = in.next();
-			if ((input.equalsIgnoreCase("P")) && (PrivacyGoal<=20)) {
+			if (input.equalsIgnoreCase("P")) {
 				addHPPrivacy();
-			}else if ((input.equalsIgnoreCase("W")) && (WealthGoal<=20)) {
+			}else if (input.equalsIgnoreCase("W")) {
 				addHPWealth();
-			}else if ((input.equalsIgnoreCase("E")) && (EnvironmentGoal<=20)) {
+			}else if (input.equalsIgnoreCase("E")) {
 				addHPEnvironment();
-			}else if ((input.equalsIgnoreCase("O")) && (PowerGoal<=45)) {
+			}else if (input.equalsIgnoreCase("O")) {
 				addHPPower();
-			}else if ((input.equalsIgnoreCase("K")) && (KnowledgeGoal <= 45)) {
+			}else if (input.equalsIgnoreCase("K")) {
 				addHPKnowledge();
 			}else {
 				System.out.println("Please enter a valid option");
@@ -71,24 +71,34 @@ public class Player {
 	}
 	
 	private void addHPPower() {
-		PowerGoal += 5;
-		points -= 5;
+		if (PowerGoal<=45) {
+			PowerGoal += 5;
+			points -= 5;
+		}
 	}
 	private void addHPEnvironment() {
-		EnvironmentGoal += 5;
-		points -= 5;
+		if (EnvironmentGoal<=20) {
+			EnvironmentGoal += 5;
+			points -= 5;
+		}
 	}
 	private void addHPPrivacy() {
-		PrivacyGoal += 5;
-		points -= 5;
+		if (PrivacyGoal<=20) {
+			PrivacyGoal += 5;
+			points -= 5;
+		}
 	}
 	private void addHPKnowledge() {
-		KnowledgeGoal += 5;
-		points -= 5;
+		if (KnowledgeGoal <= 45) {
+			KnowledgeGoal += 5;
+			points -= 5;
+		}
 	}
 	private void addHPWealth() {
-		WealthGoal += 5;
-		points -= 5;
+		if (WealthGoal<=20) {
+			WealthGoal += 5;
+			points -= 5;
+		}
 	}
 	
 	public void printGoals() {
