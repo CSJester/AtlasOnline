@@ -12,13 +12,13 @@ public class AtlasFrame extends javax.swing.JFrame {
         permitPropose(false);
         permitTravel(false);
         
-        Territory origin = new Territory("Origin", Terrain.Farmland, Resource.Food);
-		Territory south = new Territory("SouthMount",Terrain.Mountain, Resource.Metal);
-		Territory sampo = new Territory("Sampo River",Terrain.River, Resource.Water);
-		Territory quarry = new Territory("High Quarry",Terrain.Quarry, Resource.Stone);
-		Territory plateau = new Territory("Plateau",Terrain.Farmland, Resource.Food);
-		Territory x = new Territory("Mount Xeroxin",Terrain.Mountain, Resource.Metal);
-		Territory cape = new Territory("Cape Crush",Terrain.River, Resource.Water);
+        Territory origin = new Territory("Origin", Terrain.Farmland, Resource.Food, 5,5);
+		Territory south = new Territory("SouthMount",Terrain.Mountain, Resource.Metal, 10,5);
+		Territory sampo = new Territory("Sampo River",Terrain.River, Resource.Water, 15,5);
+		Territory quarry = new Territory("High Quarry",Terrain.Quarry, Resource.Stone, 5,10);
+		Territory plateau = new Territory("Plateau",Terrain.Farmland, Resource.Food, 5, 15);
+		Territory x = new Territory("Mount Xeroxin",Terrain.Mountain, Resource.Metal, 20, 20);
+		Territory cape = new Territory("Cape Crush",Terrain.River, Resource.Water,20, 10);
 		AtlasMap.connect(south, origin);
 		AtlasMap.connect(south, sampo);
 		AtlasMap.connect(sampo, quarry);
@@ -38,6 +38,7 @@ public class AtlasFrame extends javax.swing.JFrame {
 		map.addTerritory(cape);
 		player = new Player();
 		player.setGround(origin);
+		updateAdjTer();
     }
 
     /**
@@ -80,7 +81,7 @@ public class AtlasFrame extends javax.swing.JFrame {
         nameAcceptButton = new javax.swing.JButton();
         playerActionsLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        adjTerList = new javax.swing.JList();
+        adjTerList = new javax.swing.JList<String>();
         adjTerLabel = new javax.swing.JLabel();
         adjTerrainLabel = new javax.swing.JLabel();
         adjResourceLabel = new javax.swing.JLabel();
@@ -898,7 +899,12 @@ public class AtlasFrame extends javax.swing.JFrame {
     }                                                
 
     private void travelButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // TODO add your handling code here:
+        if (adjTerList.getSelectedValue() == null) {
+        	return;
+        }
+        player.travel(player.getGround().getAdjacents().get(adjTerList.getSelectedIndex()));
+        //Will move circle to player.getX() and player.getY()
+        updateAdjTer();
     }                                            
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
@@ -927,7 +933,11 @@ public class AtlasFrame extends javax.swing.JFrame {
 
     private void demoButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
         // TODO add your handling code here:
-    }                                          
+    }   
+    
+    private void updateAdjTer() {
+    	adjTerList.setListData(player.getGround().adjStrings());
+    }
 
     private void showGoals() {
     	EnGoalField.setText(""+player.getEnGoal());
@@ -1033,11 +1043,11 @@ public class AtlasFrame extends javax.swing.JFrame {
     private void showTerrainInfo() {
     	Territory ground = player.getGround();
     	curTerField.setText(ground.getName());
-    	if (ground.getNation != null) {
-    		curNationField.setText(ground.getNation());
-    	}else {
+    	//if (ground.getNation() != null) {
+    		//curNationField.setText(ground.getNation());
+    	//}else {
     		curNationField.setText("none");
-    	}
+    	//}
     	curTerrainField.setText(ground.getTerrain().toString());
     	curResourceField.setText(ground.getResource().toString());
     }
@@ -1102,7 +1112,7 @@ public class AtlasFrame extends javax.swing.JFrame {
     private javax.swing.JLabel WeLabel;
     private javax.swing.JLabel adjResourceLabel;
     private javax.swing.JLabel adjTerLabel;
-    private javax.swing.JList adjTerList;
+    private javax.swing.JList<String> adjTerList;
     private javax.swing.JLabel adjTerrainLabel;
     private javax.swing.JButton coupButton;
     private javax.swing.JTextField curResourceField;
