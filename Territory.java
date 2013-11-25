@@ -42,12 +42,12 @@ public class Territory {
 		return name;
 	}
 	
-	public Terrain getTerrain() {
-		return terrain;
+	public String getTerrain() {
+		return terrain.toString();
 	}
 	
-	public Resource getResource() {
-		return resource;
+	public String getResource() {
+		return resource.toString();
 	}
 	
 	public boolean hasNation() {
