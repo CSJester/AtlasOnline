@@ -1,44 +1,108 @@
+import java.awt.Dimension;
+
+
 public class AtlasFrame extends javax.swing.JFrame {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
      * Creates new form AtlasFrame
      */
     public AtlasFrame() {
         initComponents();
         permitVoteTaxes(false);
+        permitElection(false);
         permitGoverning(false);
         permitCoup(false);
         permitNationName(false);
         permitPropose(false);
         permitTravel(false);
         
-        Territory origin = new Territory("Origin", Terrain.Farmland, Resource.Food, 5,5);
-		Territory south = new Territory("SouthMount",Terrain.Mountain, Resource.Metal, 10,5);
-		Territory sampo = new Territory("Sampo River",Terrain.River, Resource.Water, 15,5);
-		Territory quarry = new Territory("High Quarry",Terrain.Quarry, Resource.Stone, 5,10);
-		Territory plateau = new Territory("Plateau",Terrain.Farmland, Resource.Food, 5, 15);
-		Territory x = new Territory("Mount Xeroxin",Terrain.Mountain, Resource.Metal, 20, 20);
-		Territory cape = new Territory("Cape Crush",Terrain.River, Resource.Water,20, 10);
-		AtlasMap.connect(south, origin);
-		AtlasMap.connect(south, sampo);
-		AtlasMap.connect(sampo, quarry);
-		AtlasMap.connect(quarry, origin);
-		AtlasMap.connect(origin, plateau);
-		AtlasMap.connect(plateau, x);
-		AtlasMap.connect(x, cape);
-		AtlasMap.connect(cape, plateau);
+        Territory miller = new Territory("Miller Plains", Terrain.Farmland, Resource.Food,82,164);
+		Territory high = new Territory("Highlandwood",Terrain.Forest, Resource.Wood,147,93);
+		Territory sandy = new Territory("Sandy Peak",Terrain.Mountain, Resource.Metal,297,167);
+		Territory rocky = new Territory("Rocky Point",Terrain.Quarry, Resource.Stone,348,122);
+		Territory hop = new Territory("Hop Fields",Terrain.Farmland, Resource.Food,424,105);
+		Territory titan = new Territory("Titanius",Terrain.Mountain, Resource.Metal,486,138);
+		Territory gull = new Territory("Gull Cove",Terrain.River, Resource.Water,129,176);
+		Territory mount = new Territory("Mount Fortune",Terrain.Quarry, Resource.Stone,214,185);
+		Territory marsh = new Territory("Marshway",Terrain.River, Resource.Water,309,272);
+		Territory mine = new Territory("Mineras",Terrain.Mountain, Resource.Metal,409,251);
+		Territory neu = new Territory("Neuland",Terrain.Forest, Resource.Wood,519,164);
+		Territory roll = new Territory("Rolling Wheat",Terrain.Farmland, Resource.Food,491,244);
+		Territory meer = new Territory("Meer",Terrain.River, Resource.Water,49,347);
+		Territory copper = new Territory("Copper Valley",Terrain.Mountain, Resource.Metal,104,285);
+		Territory lowland = new Territory("Lowland Glades",Terrain.Forest, Resource.Wood,136,305);
+		Territory skyward = new Territory("Skyward",Terrain.Farmland, Resource.Food,240,278);
+		Territory granite = new Territory("Granite Hills",Terrain.Quarry, Resource.Stone,285,329);
+		Territory ocean = new Territory("Oceanfront",Terrain.River, Resource.Water,407,341);
+		Territory fas = new Territory("Fasquarry",Terrain.Quarry, Resource.Stone,546,312);
+		Territory far = new Territory("Farshire",Terrain.Forest, Resource.Wood,499,364);
 		
-		AtlasMap map = new AtlasMap("World");
-		map.addTerritory(origin);
-		map.addTerritory(south);
-		map.addTerritory(sampo);
-		map.addTerritory(quarry);
-		map.addTerritory(plateau);
-		map.addTerritory(x);
-		map.addTerritory(cape);
+		
+		AtlasMap.connect(miller, high);
+		AtlasMap.connect(miller, gull);
+		AtlasMap.connect(high, gull);
+		AtlasMap.connect(high, sandy);
+		AtlasMap.connect(gull, mount);
+		AtlasMap.connect(high, mount);
+		AtlasMap.connect(mount, sandy);
+		AtlasMap.connect(sandy, rocky);
+		AtlasMap.connect(rocky, hop);
+		AtlasMap.connect(hop, titan);
+		AtlasMap.connect(titan, neu);
+		AtlasMap.connect(neu, mine);
+		AtlasMap.connect(neu, roll);
+		AtlasMap.connect(mine, roll);
+		AtlasMap.connect(mine, ocean);
+		AtlasMap.connect(ocean, far);
+		AtlasMap.connect(ocean, fas);
+		AtlasMap.connect(far, fas);
+		AtlasMap.connect(fas, roll);
+		AtlasMap.connect(gull, copper);
+		AtlasMap.connect(mount, copper);
+		AtlasMap.connect(mount, skyward);
+		AtlasMap.connect(mount, marsh);
+		AtlasMap.connect(sandy, marsh);
+		AtlasMap.connect(rocky, marsh);
+		AtlasMap.connect(marsh, skyward);
+		AtlasMap.connect(marsh, granite);
+		AtlasMap.connect(granite, skyward);
+		AtlasMap.connect(copper, lowland);
+		AtlasMap.connect(skyward, lowland);
+		AtlasMap.connect(copper, meer);
+		AtlasMap.connect(meer, lowland);
+		
+		AtlasMap map = new AtlasMap("Atlas");
+		map.addTerritory(meer);
+		map.addTerritory(lowland);
+		map.addTerritory(copper);
+		map.addTerritory(gull);
+		map.addTerritory(miller);
+		map.addTerritory(high);
+		map.addTerritory(mount);
+		map.addTerritory(skyward);
+		map.addTerritory(granite);
+		map.addTerritory(marsh);
+		map.addTerritory(sandy);
+		map.addTerritory(rocky);
+		map.addTerritory(hop);
+		map.addTerritory(titan);
+		map.addTerritory(neu);
+		map.addTerritory(roll);
+		map.addTerritory(mine);
+		map.addTerritory(ocean);
+		map.addTerritory(fas);
+		map.addTerritory(far);
+		
 		player = new Player();
-		player.setGround(origin);
+		player.setGround(map.randomTer());
 		updateAdjTer();
+		showTerrainInfo();
+		panel1.setUser(player);
+		repaint();
     }
 
     /**
@@ -46,8 +110,7 @@ public class AtlasFrame extends javax.swing.JFrame {
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    @SuppressWarnings({"deprecation" })                       
     private void initComponents() {
 
         nameField = new javax.swing.JTextField();
@@ -140,12 +203,14 @@ public class AtlasFrame extends javax.swing.JFrame {
         stoneTaxField = new javax.swing.JTextField();
         woodTaxField = new javax.swing.JTextField();
         submitButton = new javax.swing.JButton();
-        panel1 = new java.awt.Panel();
-        jLabel14 = new javax.swing.JLabel();
+        panel1 = new MapPanel();
         jLabel15 = new javax.swing.JLabel();
         curNationField = new javax.swing.JTextField();
         PointsField = new javax.swing.JTextField();
         PointsLabel = new javax.swing.JLabel();
+        cand1Button = new javax.swing.JButton();
+        cand2Button = new javax.swing.JButton();
+        cand3Button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(51, 255, 51));
@@ -215,7 +280,7 @@ public class AtlasFrame extends javax.swing.JFrame {
         jSeparatorV.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         statusField.setEditable(false);
-        statusField.setText("Creation");
+        statusField.setText("Nomad");
 
         statusLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         statusLabel.setText("Status:");
@@ -355,7 +420,7 @@ public class AtlasFrame extends javax.swing.JFrame {
         woodField.setEditable(false);
         woodField.setText("0");
 
-        propNameField.setText("curNationField");
+        propNameField.setText("jTextField1");
 
         demoButton.setText("Propose Democracy");
         demoButton.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -431,7 +496,7 @@ public class AtlasFrame extends javax.swing.JFrame {
 
         setTaxesLabel.setText("Set Taxes(%)");
 
-        waterTaxField.setText("curNationField");
+        waterTaxField.setText("0");
 
         jLabel7.setText("Water:");
 
@@ -461,24 +526,6 @@ public class AtlasFrame extends javax.swing.JFrame {
         panel1.setMaximumSize(new java.awt.Dimension(600, 450));
         panel1.setPreferredSize(new java.awt.Dimension(600, 450));
 
-        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/MapGraphic/MapGraphic.png"))); // NOI18N
-        jLabel14.setText("jLabel14");
-
-        javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
-        panel1.setLayout(panel1Layout);
-        panel1Layout.setHorizontalGroup(
-            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel1Layout.createSequentialGroup()
-                .addComponent(jLabel14)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        panel1Layout.setVerticalGroup(
-            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel1Layout.createSequentialGroup()
-                .addComponent(jLabel14)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-
         jLabel15.setText("NationName:");
 
         curNationField.setEditable(false);
@@ -488,6 +535,30 @@ public class AtlasFrame extends javax.swing.JFrame {
         PointsField.setText("100");
 
         PointsLabel.setText(": Points");
+
+        cand1Button.setText("cand1");
+        cand1Button.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        cand1Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cand1ButtonActionPerformed(evt);
+            }
+        });
+
+        cand2Button.setText("cand2");
+        cand2Button.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        cand2Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cand2ButtonActionPerformed(evt);
+            }
+        });
+
+        cand3Button.setText("cand3");
+        cand3Button.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        cand3Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cand3ButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -589,14 +660,19 @@ public class AtlasFrame extends javax.swing.JFrame {
                             .addComponent(coupButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(supportField, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
                                 .addComponent(taxPropField)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createSequentialGroup()
                                     .addComponent(yesButton)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(noButton)
-                                    .addGap(0, 0, Short.MAX_VALUE)))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(cand1Button, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(cand2Button, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(cand3Button, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(jSeparatorH1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -624,78 +700,81 @@ public class AtlasFrame extends javax.swing.JFrame {
                                     .addComponent(setTaxesLabel))))
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(11, 11, 11)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(travelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGap(48, 48, 48))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(adjResourceLabel)
-                                            .addComponent(adjTerrainLabel))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(terrainField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(resourceField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(playerActionsLabel)
-                                    .addComponent(adjTerLabel))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(10, 10, 10)
-                        .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(curTerLabel)
                                     .addComponent(curTerrainLabel)
                                     .addComponent(curResourceLabel)
                                     .addComponent(jLabel15))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(curTerrainField)
-                                    .addComponent(curTerField)
                                     .addComponent(curResourceField, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
                                     .addComponent(curNationField)))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(107, 107, 107)
-                                    .addComponent(foodTax, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGap(4, 4, 4)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(jLabel6)
-                                                .addComponent(jLabel5)
-                                                .addComponent(jLabel9)
-                                                .addComponent(jLabel10)))
-                                        .addComponent(jLabel4))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(stoneField, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(metalField, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(foodField, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(waterField, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(woodField, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGap(22, 22, 22)
-                                            .addComponent(waterTax, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(metalTax, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(stoneTax, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(woodTax, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(18, 18, 18)
-                                .addComponent(taxLabel)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(11, 11, 11)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(travelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGap(48, 48, 48))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addComponent(adjResourceLabel)
+                                                    .addComponent(adjTerrainLabel))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(terrainField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(resourceField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(playerActionsLabel)
+                                            .addComponent(adjTerLabel))
+                                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGap(10, 10, 10)
+                                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(curTerLabel)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGap(107, 107, 107)
+                                            .addComponent(foodTax, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addGap(4, 4, 4)
+                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addComponent(jLabel6)
+                                                        .addComponent(jLabel5)
+                                                        .addComponent(jLabel9)
+                                                        .addComponent(jLabel10)))
+                                                .addComponent(jLabel4))
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(stoneField, javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(metalField, javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(foodField, javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(waterField, javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(woodField, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addGap(22, 22, 22)
+                                                    .addComponent(waterTax, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(metalTax, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(stoneTax, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(woodTax, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel3)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(taxLabel))
+                                    .addComponent(curTerField, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addContainerGap(11, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -765,7 +844,10 @@ public class AtlasFrame extends javax.swing.JFrame {
                             .addComponent(dictButton)
                             .addComponent(propNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(yesButton)
-                            .addComponent(noButton))
+                            .addComponent(noButton)
+                            .addComponent(cand1Button)
+                            .addComponent(cand2Button)
+                            .addComponent(cand3Button))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
@@ -809,9 +891,9 @@ public class AtlasFrame extends javax.swing.JFrame {
                                 .addGap(32, 32, 32)
                                 .addComponent(travelButton))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(curTerLabel)
-                            .addComponent(curTerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(curTerLabel)
+                        .addGap(7, 7, 7)
+                        .addComponent(curTerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(curTerrainLabel)
@@ -824,7 +906,7 @@ public class AtlasFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel15)
                             .addComponent(curNationField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(23, 23, 23)
+                        .addGap(86, 86, 86)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(taxLabel))
@@ -894,6 +976,7 @@ public class AtlasFrame extends javax.swing.JFrame {
         	nameAcceptButton.setVisible(false);
         	statusField.setText(player.getStatus());
         	nameField.setEditable(false);
+        	repaint();
         }
     	checkPermissions();
     }                                                
@@ -905,6 +988,8 @@ public class AtlasFrame extends javax.swing.JFrame {
         player.travel(player.getGround().getAdjacents().get(adjTerList.getSelectedIndex()));
         //Will move circle to player.getX() and player.getY()
         updateAdjTer();
+        showTerrainInfo();
+        repaint();
     }                                            
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
@@ -934,6 +1019,18 @@ public class AtlasFrame extends javax.swing.JFrame {
     private void demoButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
         // TODO add your handling code here:
     }   
+    
+    private void cand2ButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // TODO add your handling code here:
+    }                                           
+
+    private void cand1ButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // TODO add your handling code here:
+    }                                           
+
+    private void cand3ButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // TODO add your handling code here:
+    }    
     
     private void updateAdjTer() {
     	adjTerList.setListData(player.getGround().adjStrings());
@@ -989,17 +1086,18 @@ public class AtlasFrame extends javax.swing.JFrame {
     	woodTaxField.setVisible(b);
     }
     
-    private void permitVoteEmpty(boolean b) {
-    	supportField.setVisible(b);
-    	yesButton.setVisible(b);
-    	noButton.setVisible(b);
-    }
-    
     private void permitVoteTaxes(boolean b) {
     	supportField.setVisible(b);
     	taxPropField.setVisible(b);
     	yesButton.setVisible(b);
     	noButton.setVisible(b);
+    }
+    
+    private void permitElection(boolean b) {
+    	supportField.setVisible(b);
+    	cand1Button.setVisible(b);
+    	cand2Button.setVisible(b);
+    	cand3Button.setVisible(b);
     }
     
     private void permitTravel(boolean b) {
@@ -1040,16 +1138,16 @@ public class AtlasFrame extends javax.swing.JFrame {
     	}
     }
     
-    private void showTerrainInfo() {
-    	Territory ground = player.getGround();
-    	curTerField.setText(ground.getName());
-    	//if (ground.getNation() != null) {
-    		//curNationField.setText(ground.getNation());
-    	//}else {
-    		curNationField.setText("none");
-    	//}
-    	curTerrainField.setText(ground.getTerrain().toString());
-    	curResourceField.setText(ground.getResource().toString());
+    private void showTerrainInfo() {    	
+    	Territory t = player.getGround();
+    	curTerField.setText(t.getName());
+    	curResourceField.setText(t.getResource().toString());
+    	curTerrainField.setText(t.getTerrain().toString());
+    	if (t.hasNation()) {
+    		curNationField.setText(t.getNation().getName());
+    	}else {
+    		curNationField.setText("<none>");
+    	}
     }
     
     /**
@@ -1133,7 +1231,6 @@ public class AtlasFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -1158,7 +1255,8 @@ public class AtlasFrame extends javax.swing.JFrame {
     private javax.swing.JTextField nationNameField;
     private javax.swing.JLabel nationNameLabel;
     private javax.swing.JButton noButton;
-    private java.awt.Panel panel1;
+    //private java.awt.JPanel panel1;
+    private MapPanel panel1;
     private javax.swing.JLabel playerActionsLabel;
     private javax.swing.JTextField propNameField;
     private javax.swing.JTextField resourceField;
@@ -1184,6 +1282,9 @@ public class AtlasFrame extends javax.swing.JFrame {
     private javax.swing.JTextField woodTax;
     private javax.swing.JTextField woodTaxField;
     private javax.swing.JButton yesButton;
+    private javax.swing.JButton cand1Button;
+    private javax.swing.JButton cand2Button;
+    private javax.swing.JButton cand3Button;
     private Player player;
     // End of variables declaration                   
 }

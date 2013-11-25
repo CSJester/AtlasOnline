@@ -10,6 +10,7 @@ public class Territory {
 	private Resource resource;
 	private int x;
 	private int y;
+	private Nation nation;
 	
 	public Territory(String name, Terrain ter, Resource res, int a, int b) {
 		this.name = name;
@@ -47,6 +48,20 @@ public class Territory {
 	
 	public Resource getResource() {
 		return resource;
+	}
+	
+	public boolean hasNation() {
+		if (nation != null) {
+			return true;
+		}
+		return false;
+	}
+	
+	public Nation getNation() {
+		if (hasNation()) {
+			return nation;
+		}
+		return null;
 	}
 	
 	public int getX() {

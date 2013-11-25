@@ -36,4 +36,8 @@ public class AtlasMap {
 		t1.addAdjacent(t2);
 		t2.addAdjacent(t1);
 	}
+	
+	public Territory randomTer() {
+		return territories.get((int)(Math.random()*19));
+	}
 }

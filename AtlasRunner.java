@@ -26,7 +26,7 @@ public class AtlasRunner {
 		map.addTerritory(x);
 		map.addTerritory(cape);
 		
-		Player player = new Player("Lame Name", origin);
+		Player player = new Player(origin);
 		
 		player.travel(quarry);
 		System.out.println("attempted move to quarry\n now in: "+player.isOn().getName());
