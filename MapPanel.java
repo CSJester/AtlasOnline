@@ -19,7 +19,7 @@ public class MapPanel extends JPanel {
 	
 	public MapPanel() {
 		try {
-			map = ImageIO.read(new File("MapGraphic.jpg"));
+			map = ImageIO.read(getClass().getResource("/resources/MapGraphic.jpg"));
 		}
 		catch (IOException e) {
 			System.out.println("graphic did not load, IOException:");
