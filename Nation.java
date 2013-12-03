@@ -4,23 +4,23 @@ import java.util.ArrayList;
 public class Nation {
 
 	private String name;
-	private ArrayList<Player> citizens;
-	private ArrayList<Player> ministers;
-	private Player leader;
-	private String type;
+	private ArrayList<Player> members;
+	private Territory territory;
 	
-	public Nation(String aName, String aType, Player aLeader) {
+	public Nation(String aName, Territory ter) {
 		name = aName;
-		leader = aLeader;
-		type = aType;
-		citizens = new ArrayList<Player>();
-		if (type.equals("Democracy")) {
-			ministers = new ArrayList<Player>();
-		}
+		members = new ArrayList<Player>();
+		territory = ter;
+		territory.setNation(this);
 	}
 	
-	public void addCitizen(Player player){
-		citizens.add(player);
+	public void addMember(Player player) {
+		members.add(player);
+		player.setNation(this);
+	}
+	
+	public void removeMember(Player player) {
+		members.remove(player);
 	}
 	
 	public String getName() {

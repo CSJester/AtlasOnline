@@ -3,7 +3,11 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+
 import java.awt.Panel;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class AtlasFrame extends javax.swing.JFrame {
 
@@ -15,14 +19,22 @@ public class AtlasFrame extends javax.swing.JFrame {
      * Creates new form AtlasFrame
      */
     public AtlasFrame() {
+    	
+    	int pace = 2000;
+    	pendingN = "";
+    	pendingT = null;
+    	
         initComponents();
-        permitVoteTaxes(true);
-        permitElection(true);
-        permitGoverning(true);
-        permitCoup(true);
-        permitNationName(true);
-        permitPropose(true);
-        permitTravel(true);
+        permitVoteTaxes(false);
+        permitElection(false);
+        permitGoverning(false);
+        permitCoup(false);
+        permitNationName(false);
+        permitPropose(false);
+        permitTravel(false);
+        permitJoin(false);
+        permitNewGov(false);
+        
         
         Territory miller = new Territory("Miller Plains", Terrain.Farmland, Resource.Food,82,164);
 		Territory high = new Territory("Highlandwood",Terrain.Forest, Resource.Wood,147,93);
@@ -101,13 +113,39 @@ public class AtlasFrame extends javax.swing.JFrame {
 		map.addTerritory(fas);
 		map.addTerritory(far);
 		
+		allPlayers = new ArrayList<Player>();
+		Territory t = map.randomTer();
+		Player[] cps = new Player[30];
+		for (int i=0; i<15; i++) {
+			cps[i] = new Player("cp"+i);
+			cps[i].setGround(t);
+			mapPanel.addPlayer(cps[i]);
+			allPlayers.add(cps[i]);
+		}
+		for (int i=15; i<30; i++) {
+			cps[i] = new Player("cp"+i);
+			cps[i].setGround(map.randomTer());
+			mapPanel.addPlayer(cps[i]);
+			allPlayers.add(cps[i]);
+		}
+		
 		player = new Player();
+		allPlayers.add(player);
 		player.setGround(map.randomTer());
 		selected = player.getGround();
 		updateAdjTer();
 		showTerrainInfo();
 		mapPanel.setUser(player);
 		repaint();
+		
+		Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                turn();
+            }
+        }, 0, pace);
     }
 
     /**
@@ -117,7 +155,7 @@ public class AtlasFrame extends javax.swing.JFrame {
      */
     @SuppressWarnings({"deprecation" })                       
     private void initComponents() {
-
+    	
         mapPanel = new MapPanel();
         nationPanel2 = new java.awt.Panel();
         jLabel11 = new javax.swing.JLabel();
@@ -274,7 +312,7 @@ public class AtlasFrame extends javax.swing.JFrame {
         });
 
         taxPropField.setEditable(false);
-        taxPropField.setText("taxes: wood:0%, ...");
+        taxPropField.setText("");
 
         supportField.setEditable(false);
         supportField.setText("player wants [support/vote] for ...");
@@ -395,7 +433,7 @@ public class AtlasFrame extends javax.swing.JFrame {
         );
 
         statusField.setEditable(false);
-        statusField.setText("Nomad");
+        statusField.setText("Create");
 
         statusLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         statusLabel.setText("Status:");
@@ -528,124 +566,124 @@ public class AtlasFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout playerPanelLayout = new javax.swing.GroupLayout(playerPanel);
         playerPanel.setLayout(playerPanelLayout);
         playerPanelLayout.setHorizontalGroup(
-            playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(playerPanelLayout.createSequentialGroup()
-                .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(playerPanelLayout.createSequentialGroup()
-                        .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, playerPanelLayout.createSequentialGroup()
-                                .addComponent(EnLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(PrLabel))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, playerPanelLayout.createSequentialGroup()
-                                .addGap(22, 22, 22)
-                                .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(EnHPButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(EnGoalField)
-                                    .addComponent(EnField, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(PrGoalField)
-                                    .addComponent(PrHPButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(PrField, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(WeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(WeGoalField)
-                            .addComponent(WeField, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(WeHPButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(PoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(PoGoalField)
-                            .addComponent(PoField)
-                            .addComponent(PoHPButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, playerPanelLayout.createSequentialGroup()
-                                .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(KnField)
-                                    .addComponent(KnGoalField)
-                                    .addComponent(KnHPButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(playerPanelLayout.createSequentialGroup()
-                                        .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(goalsTotalField)
-                                            .addComponent(statsTotalField))
-                                        .addGap(1, 1, 1)
-                                        .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(statsLabel)
-                                            .addComponent(goalsLabel)))
-                                    .addGroup(playerPanelLayout.createSequentialGroup()
-                                        .addComponent(PointsField, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(PointsLabel))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, playerPanelLayout.createSequentialGroup()
-                                .addComponent(KnLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(totalLabel))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playerPanelLayout.createSequentialGroup()
-                        .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nameAcceptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        //.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        playerPanelLayout.setVerticalGroup(
-            playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(playerPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playerPanelLayout.createSequentialGroup()
+                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(nameAcceptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                     .addComponent(statusLabel)
-                    .addComponent(nameAcceptButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(EnLabel)
-                    .addComponent(PrLabel)
-                    .addComponent(WeLabel)
-                    .addComponent(PoLabel)
-                    .addComponent(KnLabel)
-                    .addComponent(totalLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(EnField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(PrField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(WeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(PoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(KnField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(statsLabel)
-                    .addComponent(statsTotalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(EnGoalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(PrGoalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(WeGoalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(PoGoalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(KnGoalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(goalsLabel)
-                    .addComponent(goalsTotalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(EnHPButton)
-                    .addComponent(PrHPButton)
-                    .addComponent(WeHPButton)
-                    .addComponent(KnHPButton)
-                    .addComponent(PoHPButton)
-                    .addComponent(PointsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(PointsLabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(47, Short.MAX_VALUE))
+                .addGroup(playerPanelLayout.createSequentialGroup()
+                    .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(playerPanelLayout.createSequentialGroup()
+                            .addGap(22, 22, 22)
+                            .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(EnHPButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(EnField)
+                                .addComponent(EnGoalField))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(PrGoalField, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(PrField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                                .addComponent(PrHPButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGap(0, 0, Short.MAX_VALUE))
+                        .addGroup(playerPanelLayout.createSequentialGroup()
+                            .addComponent(EnLabel)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(PrLabel)))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(WeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                        .addComponent(WeGoalField)
+                        .addComponent(WeField, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(WeHPButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(PoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                        .addComponent(PoGoalField)
+                        .addComponent(PoField)
+                        .addComponent(PoHPButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, playerPanelLayout.createSequentialGroup()
+                            .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(KnField, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                                .addComponent(KnGoalField)
+                                .addComponent(KnHPButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGap(18, 18, 18)
+                            .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(playerPanelLayout.createSequentialGroup()
+                                    .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(goalsTotalField)
+                                        .addComponent(statsTotalField))
+                                    .addGap(1, 1, 1)
+                                    .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(statsLabel)
+                                        .addComponent(goalsLabel)))
+                                .addGroup(playerPanelLayout.createSequentialGroup()
+                                    .addComponent(PointsField, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(PointsLabel))))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, playerPanelLayout.createSequentialGroup()
+                            .addComponent(KnLabel)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(totalLabel)))
+                    .addGap(0, 37, Short.MAX_VALUE))
+            );
+            playerPanelLayout.setVerticalGroup(
+                playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(playerPanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(statusLabel)
+                        .addComponent(nameAcceptButton))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(EnLabel)
+                        .addComponent(PrLabel)
+                        .addComponent(WeLabel)
+                        .addComponent(PoLabel)
+                        .addComponent(KnLabel)
+                        .addComponent(totalLabel))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(EnField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(PrField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(WeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(PoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(KnField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(statsLabel)
+                        .addComponent(statsTotalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(EnGoalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(PrGoalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(WeGoalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(PoGoalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(KnGoalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(goalsLabel)
+                        .addComponent(goalsTotalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2))
+                    .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(EnHPButton)
+                        .addComponent(PrHPButton)
+                        .addComponent(WeHPButton)
+                        .addComponent(KnHPButton)
+                        .addComponent(PoHPButton)
+                        .addComponent(PointsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(PointsLabel))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            );
 
         curTerrainLabel.setText("Terrain:");
 
@@ -868,6 +906,12 @@ public class AtlasFrame extends javax.swing.JFrame {
         nationActionsLabel.setText("Nation Actions:");
 
         citizenButton.setText("Join Nation");
+        citizenButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                citizenButtonActionPerformed(evt);
+            }
+        });
+
 
         nationNameLabel.setText("Nation Name:");
 
@@ -884,9 +928,14 @@ public class AtlasFrame extends javax.swing.JFrame {
         propNameField.setText("new name");
 
         nationNameField.setEditable(false);
-        nationNameField.setText("nationname");
+        nationNameField.setText("<none>");
 
         createButton.setText("Create");
+        createButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -999,6 +1048,7 @@ public class AtlasFrame extends javax.swing.JFrame {
     private void EnHPButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
     	player.addHPEnvironment();
         showGoals();
+        repaint();
     }                                          
 
     private void PrHPButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
@@ -1028,7 +1078,6 @@ public class AtlasFrame extends javax.swing.JFrame {
         	nameAcceptButton.setVisible(false);
         	statusField.setText(player.getStatus());
         	nameField.setEditable(false);
-        	repaint();
         }
     	checkPermissions();
     }                                                
@@ -1038,15 +1087,25 @@ public class AtlasFrame extends javax.swing.JFrame {
         	return;
         }
         player.travel(selected);
-        //Will move circle to player.getX() and player.getY()
         updateAdjTer();
         showTerrainInfo();
+        updateNation();
         repaint();
     }                                            
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // TODO add your handling code here:
-    }                                            
+        // TODO
+    }     
+    
+    private void citizenButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        if (player.getStatus().equals("Nomad")){
+        	player.setNation(player.getGround().getNation());
+        	player.getGround().getNation().addMember(player);
+        }else {
+        	player.getNation().removeMember(player);
+        	player.setNation(null);
+        }
+    }    
 
     private void adjTerListMouseClicked(java.awt.event.MouseEvent evt) {   
     	if (adjTerList.getSelectedValue() == null) {
@@ -1055,14 +1114,58 @@ public class AtlasFrame extends javax.swing.JFrame {
     	selected = player.getGround().getAdjacents().get(adjTerList.getSelectedIndex());
         terrainField.setText(selected.getTerrain());
         resourceField.setText(selected.getResource());
-    }                                       
+    }
+    
+    private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    	if((pendingN.equals("")) && (pendingT == null)) {
+    		player.promptVote();
+    		pendingN = propNameField.getText();
+    		pendingT = player.getGround();
+    		supportField.setText(player.getName()+" proposes a new nation: "+pendingN);
+    		permitVoteTaxes(true);
+    		
+    		Timer timer = new Timer();
+    		timer.schedule(new TimerTask() {
+
+    			@Override
+    			public void run() {
+    				tryNation();
+            	}
+    		}, 5000);
+    	}else {
+    		note("You already have a nation pending");
+    	}
+    	
+    }     
+    
+    private void tryNation() {
+    	double percent = Voter.demoVote(pendingT);
+    	permitVoteTaxes(false);
+    	if (percent > 50.0) {
+    		Nation n = new Nation(pendingN, pendingT);
+    		player.setNation(n);
+    		permitNationName(true);
+    		permitJoin(true);
+    		updateCitizen(false);
+    		updateNation();
+    		note("Nation Successfully Created: "+pendingN+" @ "+percent+"%");
+    		permitPropose(false);
+    		statusField.setText(player.getStatus());
+    	}else {
+    		note("Nation creation failed @ "+percent);
+    	}
+    	pendingN = "";
+    	pendingT = null;
+    }
 
     private void yesButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        // TODO add your handling code here:
+        player.vote(1);
+        permitVoteTaxes(false);
     }                                         
 
     private void noButtonActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
+        player.vote(0);
+        permitVoteTaxes(false);
     }                                        
 
     private void coupButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
@@ -1088,9 +1191,34 @@ public class AtlasFrame extends javax.swing.JFrame {
     private void cand3ButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
         // TODO add your handling code here:
     }    
+
+    private void turn() {
+    	for (int i=0; i<allPlayers.size(); i++) {
+    		allPlayers.get(i).collect();
+    	}
+    	updateResources();
+    }
     
     private void updateAdjTer() {
     	adjTerList.setListData(player.getGround().adjStrings());
+    }
+    private void updateNation() {
+    	if (player.getGround().hasNation()) {
+    		nationNameField.setText(player.getGround().getNation().getName());
+    	}
+    }
+    
+    private void updateResources() {
+    	//stoneTaxField = ;
+    	//metalTaxField = ;
+    	//woodTaxField = ;
+    	//waterTaxField = ;
+    	//foodTaxField = ;
+    	stoneField.setText(""+player.getStone());
+    	waterField.setText(""+player.getWater());
+    	metalField.setText(""+player.getMetal());
+    	woodField.setText(""+player.getWood());
+    	foodField.setText(""+player.getFood());
     }
 
     private void showGoals() {
@@ -1119,13 +1247,18 @@ public class AtlasFrame extends javax.swing.JFrame {
     private void permitNationName(boolean b) {
     	nationNameField.setVisible(b);
     	nationLabel.setVisible(b);
+    	createButton.setVisible(b);
     }
     
     private void permitPropose(boolean b) {
     	nationNameLabel.setVisible(b);
     	propNameField.setVisible(b);
-    	dictButton.setVisible(b);
+    	createButton.setVisible(b);
+    }
+    
+    private void permitNewGov(boolean b) {
     	demoButton.setVisible(b);
+    	dictButton.setVisible(b);
     }
     
     private void permitGoverning(boolean b) {
@@ -1143,15 +1276,30 @@ public class AtlasFrame extends javax.swing.JFrame {
     	woodTaxField.setVisible(b);
     }
     
+    private void permitJoin(boolean b) {
+    	citizenButton.setVisible(b);
+    }
+    
+    private void updateCitizen(boolean onNation) {
+    	if (onNation) {
+    		citizenButton.setText("Join Nation");
+    	}else {
+    		citizenButton.setText("Leave Nation");
+    	}
+    }
+    
+    //private void permit voteInfo(boolean b) {
+    	//supportField;
+    //}
+    
     private void permitVoteTaxes(boolean b) {
-    	supportField.setVisible(b);
     	taxPropField.setVisible(b);
     	yesButton.setVisible(b);
     	noButton.setVisible(b);
     }
     
     private void permitElection(boolean b) {
-    	supportField.setVisible(b);
+    	taxPropField.setVisible(b);
     	cand1Button.setVisible(b);
     	cand2Button.setVisible(b);
     	cand3Button.setVisible(b);
@@ -1169,16 +1317,32 @@ public class AtlasFrame extends javax.swing.JFrame {
     
     private void checkPermissions() {
     	String name = player.getStatus();
+    	if (name.equals("Create")) {
+    		permitGoverning(false);
+    		permitNationName(false);
+    		permitTravel(false);
+    		permitPropose(false);
+    		permitCoup(false);
+    		permitNewGov(false);
+    		permitJoin(false);
+    		permitVoteTaxes(false);
+    		permitElection(false);
+    	}
     	if (name.equals("Nomad")) {
     		permitGoverning(false);
     		permitPropose(true);
     		permitCoup(false);
     		permitTravel(true);
+    		if (player.isOn().getNation() != null) {
+    			permitJoin(true);
+    			updateCitizen(false);
+    		}
     	}else if (name.equals("Citizen")) {
     		permitGoverning(false);
     		permitPropose(false);
     		permitNationName(true);
     		permitTravel(true);
+    		updateCitizen(false);
     		//UPDATE TO DISALLOW COUP IF IN DEMO, ALLOW COUP IF IN DICT *******
     	}else if (name.equals("President")) {
     		permitTravel(true);
@@ -1186,13 +1350,19 @@ public class AtlasFrame extends javax.swing.JFrame {
     		permitPropose(false);
     		permitCoup(false);
     		permitNationName(true);
+    		updateCitizen(false);
     	}else if (name.equals("Dictator")) {
     		permitTravel(true);
     		permitGoverning(true);
     		permitPropose(false);
     		permitCoup(false);
     		permitNationName(true);
+    		updateCitizen(false);
     	}
+    }
+    private void note(String S) {
+    	supportField.setVisible(true);
+    	supportField.setText(S);
     }
     
     private void showTerrainInfo() {    	
@@ -1205,6 +1375,10 @@ public class AtlasFrame extends javax.swing.JFrame {
     	}else {
     		curNationField.setText("<none>");
     	}
+    }
+    
+    public void update() {
+    	
     }
     
     /**
@@ -1346,6 +1520,9 @@ public class AtlasFrame extends javax.swing.JFrame {
     private Panel currentPanel;
     private Player player;
     private Territory selected;
+    private ArrayList<Player> allPlayers;
+    private String pendingN;
+    private Territory pendingT;
     // End of variables declaration                   
 }
 

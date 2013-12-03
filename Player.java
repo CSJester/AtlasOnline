@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 
 public class Player {
 
@@ -26,19 +24,18 @@ public class Player {
 	private int points;
 	private Territory ground;
 	private String status;
-	private boolean create;
+	private Nation nation;
 	private int x;
 	private int y;
+	private int vote;
 	//private Nation nation;
 	
 	
 	
 	public Player() {
-		//Scanner in = new Scanner(System.in);
-		create = true;
-		//System.out.println("Player: "+name);
 		points = 100;
-		status = "Creating";
+		status = "Create";
+		nation = null;
 		
 		Privacy = 100;
 		Wealth = 0;
@@ -73,6 +70,24 @@ public class Player {
 		//}
 		//System.out.println("Out of goal points, time to play!");
 		//in.close();
+	}
+	
+	public Player(String newName) {
+		name = newName;
+		points = 0;
+		status = "Nomad";
+		
+		Privacy = 100;
+		Wealth = 0;
+		Environment = 0;
+		Power = 0;
+		Knowledge = 0;
+		
+		PrivacyGoal = 20;
+		WealthGoal = 20;
+		EnvironmentGoal = 20;
+		PowerGoal = 20;
+		KnowledgeGoal = 20;
 	}
 	
 	public void addHPPower() {
@@ -192,6 +207,23 @@ public class Player {
 		return WealthGoal;
 	}
 	
+	
+	public int getStone() {
+		return Stone;
+	}
+	public int getWater() {
+		return Water;
+	}
+	public int getFood() {
+		return Food;
+	}
+	public int getMetal() {
+		return Metal;
+	}
+	public int getWood() {
+		return Wood;
+	}
+	
 	public void setGround(Territory origin) {
 		ground = origin;
 		ground.addPlayer(this);
@@ -214,11 +246,60 @@ public class Player {
 		return status;
 	}
 	
+	public void setStatus(String S) {
+		status = S;
+	}
+	
 	public int getX() {
 		return x;
 	}
 	public int getY() {
 		return y;
+	}
+	
+	public void collect() {
+		String s = ground.getResource();
+		if (s.equals("Water")) {
+			Water++;
+		}else if (s.equals("Wood")) {
+			Wood++;
+		}else if (s.equals("Metal")) {
+			Metal++;
+		}else if (s.equals("Stone")) {
+			Stone++;
+		}else {
+			Food++;
+		}
+	}
+	
+	public void promptVote() {
+		vote = -1;
+	}
+	
+	public int getVote() {
+		return vote;
+	}
+	
+	public void vote(int v) {
+		vote = v;
+	}
+	
+	public Nation getNation() {
+		if (nation!=null) {
+			return nation;
+		}else {
+			return null;
+		}
+	}
+	
+	public void setNation(Nation n) {
+		if (n==null) {
+			nation = null;
+			status = "Nomad";
+		}else {
+			nation = n;
+			status = "Member";
+		}
 	}
 	
 }

@@ -81,4 +81,16 @@ public class Territory {
 		}
 		return list;
 	}
+	
+	public int numPlayers() {
+		return players.size();
+	}
+	
+	public void setNation(Nation N) {
+		nation = N;
+	}
+	
+	public ArrayList<Player> getPlayers() {
+		return players;
+	}
 }
